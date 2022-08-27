@@ -50,17 +50,21 @@ class AppointmentDetailApiView(APIView):
         try:
             return Appointments.objects.get(id=appointment_id, user = user_id)
         except Appointments.DoesNotExist:
-            return None
+            #return None
+            return Response(
+                {"res": "Object with appointment id does not exists"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
     # 3. Retrieve
     def get(self, request, appointment_id, *args, **kwargs):
         '''
-        Retrieves the Todo with given appointment_id
+        Retrieves the rows with given appointment_id
         '''
         appointment_instance = self.get_object(appointment_id, request.user.id)
         if not appointment_instance:
             return Response(
-                {"res": "Object with todo id does not exists"},
+                {"res": "Object with appointment_id does not exists"},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -70,12 +74,12 @@ class AppointmentDetailApiView(APIView):
     # 4. Update
     def put(self, request, appointment_id, *args, **kwargs):
         '''
-        Updates the todo item with given appointment_id if exists
+        Updates the record with given appointment_id if exists
         '''
         appointment_instance = self.get_object(appointment_id, request.user.id)
         if not appointment_instance:
             return Response(
-                {"res": "Object with todo id does not exists"}, 
+                {"res": "Object with appointment_id does not exists"}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
         data = {
@@ -94,12 +98,12 @@ class AppointmentDetailApiView(APIView):
     # 5. Delete
     def delete(self, request, appointment_id, *args, **kwargs):
         '''
-        Deletes the todo item with given appointment_id if exists
+        Deletes the record with given appointment_id if exists
         '''
         appointment_instance = self.get_object(appointment_id, request.user.id)
         if not appointment_instance:
             return Response(
-                {"res": "Object with todo id does not exists"}, 
+                {"res": "Object with appointment_id does not exists"}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
         appointment_instance.delete()
